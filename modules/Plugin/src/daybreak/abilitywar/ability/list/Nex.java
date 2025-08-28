@@ -130,7 +130,7 @@ public class Nex extends AbilityBase implements ActiveHandler {
 		public void run(int count) {
 			int distance = 6 - count;
 
-			if (ServerVersion.getVersion() >= 13) {
+			if (true) { // Paper 1.21.8에서는 항상 true
 				for (Block block : LocationUtil.getBlocks2D(center, distance, true, true, true)) {
 					if (block.getType() == Material.AIR) block = block.getRelative(BlockFace.DOWN);
 					if (block.getType() == Material.AIR) continue;

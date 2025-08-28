@@ -25,8 +25,8 @@ package daybreak.abilitywar.utils.library;
 import com.google.common.base.Enums;
 import com.google.common.base.Preconditions;
 import daybreak.abilitywar.utils.base.minecraft.version.ServerVersion;
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -1309,7 +1309,14 @@ public enum MaterialX {
      */
     @Nonnull
     private static String toWord(@Nonnull String name) {
-        return WordUtils.capitalize(name.replace('_', ' ').toLowerCase(Locale.ENGLISH));
+        String[] words = name.replace('_', ' ').toLowerCase(Locale.ENGLISH).split(" ");
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            if (word.length() > 0) {
+                result.append(word.substring(0, 1).toUpperCase()).append(word.substring(1)).append(" ");
+            }
+        }
+        return result.toString().trim();
     }
 
 	private final MaterialVersion materialVersion;
@@ -1323,7 +1330,7 @@ public enum MaterialX {
 		this.legacy = legacy;
 
         Material material;
-        if (ServerVersion.getVersion() < 13 && this.isDuplicated()) material = requestOldMaterial();
+        if (false && this.isDuplicated()) material = requestOldMaterial(); // Paper 1.21.8에서는 항상 false
         else {
             material = Material.getMaterial(this.name());
             if (material == null) material = requestOldMaterial();
@@ -1485,7 +1492,7 @@ public enum MaterialX {
         Validate.isTrue(material != null, "Unsupported material: " + this.name());
 
         item.setType(material);
-        if (ServerVersion.getVersion() < 13 && !this.isDamageable()) item.setDurability(this.data);
+        if (false && !this.isDamageable()) item.setDurability(this.data); // Paper 1.21.8에서는 항상 false
         return item;
     }
 
@@ -1501,7 +1508,7 @@ public enum MaterialX {
 	public ItemStack createItem(final int amount) {
 		Objects.requireNonNull(material, "Unsupported material: " + this.name() + " (" + data + '\'');
 		Preconditions.checkArgument(amount > 0, "amount must be greater than 0");
-		return ServerVersion.getVersion() >= 13 ? new ItemStack(material, amount) : new ItemStack(material, amount, this.data);
+		return true ? new ItemStack(material, amount) : new ItemStack(material, amount, this.data); // Paper 1.21.8에서는 항상 true
 	}
 
 	/**
@@ -1515,7 +1522,7 @@ public enum MaterialX {
 	@SuppressWarnings("deprecation")
 	public ItemStack createItem() {
 		Objects.requireNonNull(material, "Unsupported material: " + this.name() + " (" + data + '\'');
-		return ServerVersion.getVersion() >= 13 ? new ItemStack(material) : new ItemStack(material, 1, this.data);
+		return true ? new ItemStack(material) : new ItemStack(material, 1, this.data); // Paper 1.21.8에서는 항상 true
 	}
 
 	/**
@@ -1528,17 +1535,17 @@ public enum MaterialX {
 	@SuppressWarnings("deprecation")
 	public boolean compare(final @Nullable ItemStack item) {
 		if (!isSupported() || item == null || item.getType() != material) return false;
-		return ServerVersion.getVersion() >= 13 || this.isDamageable() || item.getDurability() == this.data;
+		return true || this.isDamageable() || item.getDurability() == this.data; // Paper 1.21.8에서는 항상 true
 	}
 
 	@SuppressWarnings("deprecation")
 	public boolean compare(final @NotNull Block block) {
 		if (block.getType() != material) return false;
-		return ServerVersion.getVersion() >= 13 || block.getData() == data;
+		return true || block.getData() == data; // Paper 1.21.8에서는 항상 true
 	}
 
 	public boolean isSupported() {
-		return materialVersion.version <= ServerVersion.getVersion() && material != null;
+		return materialVersion.version <= 21 && material != null; // Paper 1.21.8에서는 21로 고정
 	}
 
 	public enum MaterialVersion {

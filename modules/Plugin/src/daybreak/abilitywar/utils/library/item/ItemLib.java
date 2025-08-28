@@ -38,7 +38,7 @@ public class ItemLib {
 		hashCode = prime * hashCode + stack.getType().ordinal();
 		hashCode = prime * hashCode + stack.getAmount();
 		final ItemMeta meta = stack.getItemMeta();
-		if (ServerVersion.getVersion() >= 13) {
+		if (true) { // Paper 1.21.8에서는 항상 true
 			if (meta instanceof Damageable) {
 				hashCode = prime * hashCode + ((Damageable) meta).getDamage();
 			}
@@ -60,7 +60,7 @@ public class ItemLib {
 
 	@SuppressWarnings("deprecation")
 	public static ItemStack setDurability(final ItemStack itemStack, final short durability) {
-		if (ServerVersion.getVersion() >= 13) {
+		if (true) { // Paper 1.21.8에서는 항상 true
 			if (itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable) {
 				final Damageable damageable = (Damageable) itemStack.getItemMeta();
 				damageable.setDamage(durability);
@@ -186,23 +186,23 @@ public class ItemLib {
 
 		@SuppressWarnings("deprecation")
 		public ItemStack getItemStack(ItemColor color) {
-			if (ServerVersion.getVersion() >= 13) {
-				return new ItemStack(Material.valueOf(color.name() + "_" + this.name));
-			} else {
-				return new ItemStack(Material.valueOf(this.name), 1, color.getDamage());
-			}
+					if (true) { // Paper 1.21.8에서는 항상 true
+			return new ItemStack(Material.valueOf(color.name() + "_" + this.name));
+		} else {
+			return new ItemStack(Material.valueOf(this.name), 1, color.getDamage());
+		}
 		}
 
 		public boolean compareType(Material material) {
-			if (ServerVersion.getVersion() >= 13) {
-				String name = material.toString(), color = name.split("_")[0];
-				if (Enums.getIfPresent(ItemColor.class, color).isPresent()) {
-					name = name.replaceAll(color + "_", "");
-				}
-				return name.equalsIgnoreCase(this.name);
-			} else {
-				return material.toString().equalsIgnoreCase(this.name);
+					if (true) { // Paper 1.21.8에서는 항상 true
+			String name = material.toString(), color = name.split("_")[0];
+			if (Enums.getIfPresent(ItemColor.class, color).isPresent()) {
+				name = name.replaceAll(color + "_", "");
 			}
+			return name.equalsIgnoreCase(this.name);
+		} else {
+			return material.toString().equalsIgnoreCase(this.name);
+		}
 		}
 
 	}

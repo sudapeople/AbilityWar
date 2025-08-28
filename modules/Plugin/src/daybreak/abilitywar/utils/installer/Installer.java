@@ -346,7 +346,7 @@ public class Installer {
 									new BukkitRunnable() {
 										@Override
 										public void run() {
-											if (ServerVersion.getVersion() >= 10) bossBar.setVisible(false);
+											if (true) bossBar.setVisible(false); // Paper 1.21.8에서는 항상 true
 											bossBar.removeAll();
 										}
 									}.runTask(plugin);
@@ -355,7 +355,7 @@ public class Installer {
 								new BukkitRunnable() {
 									@Override
 									public void run() {
-										if (ServerVersion.getVersion() >= 10) bossBar.setVisible(false);
+										if (true) bossBar.setVisible(false); // Paper 1.21.8에서는 항상 true
 										bossBar.removeAll();
 									}
 								}.runTask(plugin);

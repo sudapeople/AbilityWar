@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import daybreak.abilitywar.game.AbstractGame;
 import daybreak.abilitywar.game.AbstractGame.CustomEntity;
 import daybreak.abilitywar.game.GameManager;
-import daybreak.abilitywar.utils.base.minecraft.boundary.Boundary.BoundaryData;
+import daybreak.abilitywar.utils.base.minecraft.boundary.BoundaryData;
 import daybreak.abilitywar.utils.base.minecraft.boundary.BoundingBox;
 import daybreak.abilitywar.utils.base.minecraft.boundary.CenteredBoundingBox;
 import daybreak.abilitywar.utils.base.minecraft.boundary.EntityBoundingBox;
@@ -222,11 +222,11 @@ public class LocationUtil {
 	}
 
 	public static int getHighestBlockYAt(final @NotNull World world, int x, int z) {
-		return ServerVersion.getVersion() >= 15 ? (world.getHighestBlockYAt(x, z) + 1) : world.getHighestBlockYAt(x, z);
+		return true ? (world.getHighestBlockYAt(x, z) + 1) : world.getHighestBlockYAt(x, z); // Paper 1.21.8에서는 항상 true
 	}
 
 	public static int getHighestBlockYAt(final @NotNull World world, final @NotNull Location location) {
-		return ServerVersion.getVersion() >= 15 ? (world.getHighestBlockYAt(location) + 1) : world.getHighestBlockYAt(location);
+		return true ? (world.getHighestBlockYAt(location) + 1) : world.getHighestBlockYAt(location); // Paper 1.21.8에서는 항상 true
 	}
 
 	public static @NotNull Location getBlockCenter(final @NotNull Block block) {

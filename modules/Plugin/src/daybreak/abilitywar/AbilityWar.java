@@ -25,6 +25,7 @@ import daybreak.abilitywar.utils.base.math.FastMath;
 import daybreak.abilitywar.utils.base.minecraft.server.ServerType;
 import daybreak.abilitywar.utils.base.minecraft.version.NMSVersion;
 import daybreak.abilitywar.utils.base.minecraft.version.ServerVersion;
+import io.papermc.paper.plugin.loader.PluginLoader;
 import daybreak.abilitywar.utils.installer.Installer;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -103,7 +104,7 @@ public class AbilityWar extends JavaPlugin implements Provider, Listener {
 
 	@Override
 	public void onEnable() {
-		if (!ServerVersion.compatVersion(this)) return;
+		// Paper Plugin 시스템에서는 서버 버전 체크가 자동으로 처리됨
 		getCommand("AbilityWar").setExecutor(commands);
 		Bukkit.getPluginManager().registerEvents(this, this);
 		AddonLoader.loadAll();
@@ -146,12 +147,8 @@ public class AbilityWar extends JavaPlugin implements Provider, Listener {
 				}
 			}
 		});
-		Messager.sendConsoleMessage("플러그인이 활성화되었습니다. §8(§7" + ServerType.getServerType() + " " + ServerVersion.getName() + "§8)");
-		if (ServerType.getServerType() != ServerType.PAPER) {
-			Messager.sendConsoleMessage("Paper 서버 사용을 추천드립니다. " + (
-					ServerVersion.isAboveOrEqual(NMSVersion.v1_17_R1) ? "https://papermc.io/downloads" : "https://papermc.io/legacy"
-			));
-		}
+		Messager.sendConsoleMessage("플러그인이 활성화되었습니다. §8(§7Paper 1.21.8§8)");
+		Messager.sendConsoleMessage("Paper Plugin 시스템을 사용하여 로드되었습니다.");
 	}
 
 	@Override

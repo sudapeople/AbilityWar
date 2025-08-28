@@ -17,7 +17,7 @@ import daybreak.abilitywar.utils.library.MaterialX;
 import daybreak.abilitywar.utils.library.SoundLib;
 import daybreak.abilitywar.utils.library.item.ItemLib;
 import daybreak.abilitywar.utils.library.item.ItemLib.ItemColor;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

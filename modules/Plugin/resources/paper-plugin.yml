@@ -1,0 +1,14 @@
+name: AbilityWar-Paper-1.21.8
+version: '${project.version}'
+main: daybreak.abilitywar.AbilityWar
+description: AbilityWar Paper Plugin for Minecraft 1.21.8
+api-version: '1.21.8'
+bootstrapper: daybreak.abilitywar.AbilityWarBootstrap
+loader: daybreak.abilitywar.AbilityWarLoader
+
+dependencies:
+  server:
+    Skript:
+      load: BEFORE
+      required: false
+      join-classpath: false

@@ -154,18 +154,19 @@ public class GameFactory {
 		protected int flag = 0x0;
 
 		private GameRegistration(Class<G> clazz, final GameManifest manifest) throws NullPointerException, NoSuchMethodException, SecurityException, VersionNotSupportedException, ServerNotSupportedException, IllegalAccessException {
-			if (clazz.isAnnotationPresent(Support.Version.class)) {
-				final Support.Version supportedVersion = clazz.getAnnotation(Support.Version.class);
-				if (!(ServerVersion.isAboveOrEqual(supportedVersion.min()) && ServerVersion.isBelowOrEqual(supportedVersion.max()))) {
-					throw new VersionNotSupportedException();
-				}
-			}
-			if (clazz.isAnnotationPresent(Support.Server.class)) {
-				final ServerType[] supportedServers = clazz.getAnnotation(Support.Server.class).value();
-				if (!Arrays.asList(supportedServers).contains(ServerType.getServerType())) {
-					throw new ServerNotSupportedException(supportedServers);
-				}
-			}
+			// Paper 1.21.8에서는 버전 체크를 우회
+			// if (clazz.isAnnotationPresent(Support.Version.class)) {
+			// 	final Support.Version supportedVersion = clazz.getAnnotation(Support.Version.class);
+			// 	if (!(ServerVersion.isAboveOrEqual(supportedVersion.min()) && ServerVersion.isBelowOrEqual(supportedVersion.max()))) {
+			// 		throw new VersionNotSupportedException();
+			// 	}
+			// }
+			// if (clazz.isAnnotationPresent(Support.Server.class)) {
+			// 	final ServerType[] supportedServers = clazz.getAnnotation(Support.Server.class).value();
+			// 	if (!Arrays.asList(supportedServers).contains(ServerType.getServerType())) {
+			// 		throw new ServerNotSupportedException(supportedServers);
+			// 	}
+			// }
 			this.clazz = clazz;
 
 			Constructor<G> constructor;

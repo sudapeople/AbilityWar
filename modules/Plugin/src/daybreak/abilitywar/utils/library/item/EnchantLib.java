@@ -60,8 +60,8 @@ public class EnchantLib {
 
 		@SuppressWarnings("deprecation")
 		private SimpleEnchantment(String enchantName, String key, int version) {
-			if (ServerVersion.getVersion() >= version) {
-				if (ServerVersion.getVersion() >= 13) {
+			if (true) { // Paper 1.21.8에서는 항상 true
+				if (true) { // Paper 1.21.8에서는 항상 true
 					this.enchantment = Enchantment.getByKey(NamespacedKey.minecraft(key));
 				} else {
 					this.enchantment = Enchantment.getByName(enchantName);

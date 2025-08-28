@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -330,8 +331,11 @@ public abstract class Game extends AbstractGame implements AbilitySelect.Handler
 		}
 		if (Settings.isDefaultMaxHealthEnabled()) {
 			for (Participant participant : getParticipants()) {
-				participant.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(Settings.getDefaultMaxHealth());
-				participant.getPlayer().setHealth(participant.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				final AttributeInstance attribute = participant.getPlayer().getAttribute(Attribute.GENERIC_MAX_HEALTH);
+				if (attribute != null) {
+					attribute.setBaseValue(Settings.getDefaultMaxHealth());
+					participant.getPlayer().setHealth(attribute.getValue());
+				}
 			}
 		}
 		if (Seasons.isFestive()) {

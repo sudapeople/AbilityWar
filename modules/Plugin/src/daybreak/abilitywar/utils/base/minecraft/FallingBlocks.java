@@ -1,135 +1,107 @@
 package daybreak.abilitywar.utils.base.minecraft;
 
-import daybreak.abilitywar.AbilityWar;
-import daybreak.abilitywar.utils.base.minecraft.version.ServerVersion;
-import daybreak.abilitywar.utils.library.MaterialX;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.World;
 import org.bukkit.entity.FallingBlock;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 /**
- * FallingBlock을 더욱 편하게 사용하기 위해 만든 유틸입니다.
- *
+ * 낙하 블록 유틸리티 클래스
  * @author Daybreak 새벽
  */
 public class FallingBlocks {
+    
+    public enum Behavior {
+        NORMAL,
+        NO_GRAVITY,
+        NO_DROP,
+        FALSE
+    }
+    
+    /**
+     * 낙하 블록을 생성합니다.
+     */
+    public static FallingBlock spawnFallingBlock(Location location, Material material) {
+        return location.getWorld().spawnFallingBlock(location, material.createBlockData());
+    }
+    
+    /**
+     * 낙하 블록을 생성합니다.
+     */
+    public static FallingBlock spawnFallingBlock(Location location, Material material, byte data) {
+        return location.getWorld().spawnFallingBlock(location, material.createBlockData());
+    }
+    
+    /**
+     * 낙하 블록을 생성하고 속도를 설정합니다.
+     */
+    public static FallingBlock spawnFallingBlock(Location location, Material material, Vector velocity) {
+        FallingBlock fallingBlock = spawnFallingBlock(location, material);
+        fallingBlock.setVelocity(velocity);
+        return fallingBlock;
+    }
+    
+                 /**
+              * 낙하 블록을 생성하고 행동을 설정합니다.
+              */
+             public static FallingBlock spawnFallingBlock(Location location, Material material, Behavior behavior) {
+                 FallingBlock fallingBlock = spawnFallingBlock(location, material);
 
-	@SuppressWarnings("deprecation")
-	public static FallingBlock spawnFallingBlock(Location location, Material type, byte data, boolean glowing, Vector velocity, Behavior behavior) {
-		final FallingBlock fallingBlock;
-		if (ServerVersion.getVersion() >= 13)
-			fallingBlock = location.getWorld().spawnFallingBlock(location, type.createBlockData());
-		else fallingBlock = location.getWorld().spawnFallingBlock(location, type, data);
-		if (behavior != null) {
-			final BlockHandler handler = new BlockHandler() {
-				@Override
-				public void run() {
-					if (!fallingBlock.isValid()) {
-						unregister();
-					}
-				}
+                 switch (behavior) {
+                     case NO_GRAVITY:
+                         fallingBlock.setGravity(false);
+                         break;
+                     case NO_DROP:
+                         fallingBlock.setDropItem(false);
+                         break;
+                     default:
+                         break;
+                 }
 
-				@EventHandler
-				public void onEntityChangeBlock(final EntityChangeBlockEvent event) {
-					if (event.getEntity().equals(fallingBlock)) {
-						if (!behavior.onEntityChangeBlock(fallingBlock, event)) {
-							event.setCancelled(true);
-							event.getEntity().remove();
-						}
-						unregister();
-					}
-				}
-			};
-			handler.runTaskTimer(AbilityWar.getPlugin(), 0L, 200L);
-			Bukkit.getPluginManager().registerEvents(handler, AbilityWar.getPlugin());
-		}
-
-		fallingBlock.setGlowing(glowing);
-		if (ServerVersion.getVersion() >= 10) fallingBlock.setInvulnerable(true);
-		fallingBlock.setDropItem(false);
-		if (velocity != null) {
-			fallingBlock.setVelocity(velocity);
-		}
-
-		return fallingBlock;
-	}
-
-	public static FallingBlock spawnFallingBlock(Block block, boolean glowing, Vector velocity, Behavior behavior) {
-		if (ServerVersion.getVersion() >= 13)
-			return spawnFallingBlock(block.getLocation(), block.getType(), (byte) 0, glowing, velocity, behavior);
-		else
-			return spawnFallingBlock(block.getLocation(), block.getType(), block.getData(), glowing, velocity, behavior);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, MaterialX type, boolean glowing, Vector velocity, Behavior behavior) {
-		if (ServerVersion.getVersion() >= 13)
-			return spawnFallingBlock(location, type.getMaterial(), (byte) 0, glowing, velocity, behavior);
-		else return spawnFallingBlock(location, type.getMaterial(), type.getData(), glowing, velocity, behavior);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, byte data, boolean glowing, Behavior behavior) {
-		return spawnFallingBlock(location, type, data, glowing, null, behavior);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, byte data, boolean glowing, Vector velocity) {
-		return spawnFallingBlock(location, type, data, glowing, velocity, null);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, byte data, boolean glowing) {
-		return spawnFallingBlock(location, type, data, glowing, null, null);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, boolean glowing, Vector velocity, Behavior behavior) {
-		return spawnFallingBlock(location, type, (byte) 0, glowing, velocity, behavior);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, boolean glowing, Behavior behavior) {
-		return spawnFallingBlock(location, type, (byte) 0, glowing, null, behavior);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, boolean glowing, Vector velocity) {
-		return spawnFallingBlock(location, type, (byte) 0, glowing, velocity, null);
-	}
-
-	public static FallingBlock spawnFallingBlock(Location location, Material type, boolean glowing) {
-		return spawnFallingBlock(location, type, (byte) 0, glowing, null, null);
-	}
-
-	@FunctionalInterface
-	public interface Behavior {
-
-		Behavior TRUE = new Behavior() {
-			@Override
-			public boolean onEntityChangeBlock(FallingBlock fallingBlock, EntityChangeBlockEvent event) {
-				return true;
-			}
-		};
-		Behavior FALSE = new Behavior() {
-			@Override
-			public boolean onEntityChangeBlock(FallingBlock fallingBlock, EntityChangeBlockEvent event) {
-				return false;
-			}
-		};
-
-		boolean onEntityChangeBlock(FallingBlock fallingBlock, EntityChangeBlockEvent event);
-
-	}
-
-	private abstract static class BlockHandler extends BukkitRunnable implements Listener {
-
-		protected void unregister() {
-			HandlerList.unregisterAll(this);
-			cancel();
-		}
-
-	}
-
-}
+                 return fallingBlock;
+             }
+             
+             /**
+              * 낙하 블록을 생성합니다 (복합 매개변수).
+              */
+             public static FallingBlock spawnFallingBlock(Location location, Material material, boolean dropItem, Vector velocity, Behavior behavior) {
+                 FallingBlock fallingBlock = spawnFallingBlock(location, material, velocity);
+                 fallingBlock.setDropItem(dropItem);
+                 
+                 switch (behavior) {
+                     case NO_GRAVITY:
+                         fallingBlock.setGravity(false);
+                         break;
+                     case NO_DROP:
+                         fallingBlock.setDropItem(false);
+                         break;
+                     default:
+                         break;
+                 }
+                 
+                 return fallingBlock;
+             }
+             
+             /**
+              * 낙하 블록을 생성합니다 (복합 매개변수).
+              */
+             public static FallingBlock spawnFallingBlock(Location location, Material material, byte data, boolean dropItem, Vector velocity, Behavior behavior) {
+                 FallingBlock fallingBlock = spawnFallingBlock(location, material, data);
+                 fallingBlock.setDropItem(dropItem);
+                 fallingBlock.setVelocity(velocity);
+                 
+                 switch (behavior) {
+                     case NO_GRAVITY:
+                         fallingBlock.setGravity(false);
+                         break;
+                     case NO_DROP:
+                         fallingBlock.setDropItem(false);
+                         break;
+                     default:
+                         break;
+                 }
+                 
+                 return fallingBlock;
+             }
+         }

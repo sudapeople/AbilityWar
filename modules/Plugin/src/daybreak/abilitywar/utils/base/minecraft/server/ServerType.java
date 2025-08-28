@@ -1,31 +1,47 @@
 package daybreak.abilitywar.utils.base.minecraft.server;
 
-import com.google.common.base.Enums;
 import org.bukkit.Bukkit;
 
-public enum ServerType {
-
-	UNKNOWN,
-	CRAFTBUKKIT,
-	SPIGOT,
-	PAPER;
-
-	private static class Companion {
-		public static final ServerType INSTANCE;
-
-		static {
-			final String[] split = Bukkit.getVersion().split("-");
-			final String name = split[1].toUpperCase();
-			INSTANCE = Enums.getIfPresent(ServerType.class, name).or(name.equals("BUKKIT") ? CRAFTBUKKIT : UNKNOWN);
-		}
-	}
-
-	public static ServerType getServerType() {
-		return Companion.INSTANCE;
-	}
-
-	public static boolean is(final ServerType other) {
-		return Companion.INSTANCE == other;
-	}
-
+/**
+ * 서버 타입 관리 클래스
+ * @author Daybreak 새벽
+ */
+public class ServerType {
+    
+    public static final ServerType PAPER = new ServerType("Paper");
+    public static final ServerType SPIGOT = new ServerType("Spigot");
+    public static final ServerType CRAFTBUKKIT = new ServerType("CraftBukkit");
+    
+    private final String name;
+    
+    private ServerType(String name) {
+        this.name = name;
+    }
+    
+    public static ServerType getServerType() {
+        String serverName = Bukkit.getName();
+        if (serverName.contains("Paper")) {
+            return PAPER;
+        } else if (serverName.contains("Spigot")) {
+            return SPIGOT;
+        } else {
+            return CRAFTBUKKIT;
+        }
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
+    
+    /**
+     * 서버 타입의 이름을 반환합니다.
+     */
+    public String name() {
+        return name;
+    }
 }
